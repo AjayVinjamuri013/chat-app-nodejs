@@ -4,6 +4,8 @@ const socketIO = require('socket.io');
 const http = require('http');
 const publicPath = path.join(__dirname,'../public');
 const port = process.env.PORT ||3000;
+const {generateMessage} = require('./utils/message');
+
 //console.log(publicPath);
 var app=  express();
 var server = http.createServer(app);
@@ -21,23 +23,11 @@ io.on('connection',(socket)=>{
 // 	text:'ssup',
 // 	createdAt : 123
 // 	});
-socket.emit('newMessage',{
-	from : 'admin',
-	text : 'welcome!!',
-	createdAt : new Date().getTime()
-});
-socket.broadcast.emit('newMessage',{
-	from:'admin',
-	text : 'new user joined',
-	createdAt : new Date().getTime()
-});
+socket.emit('newMessage',generateMessage('Admin','Welcome !!!'));
+socket.broadcast.emit('newMessage',generateMessage('Admin','new user joined'));
 socket.on('createMessage',(newmsg)=>{
 		console.log('new msg',newmsg);
-		io.emit('newMessage',{
-			from : newmsg.from,
-			text : newmsg.text,
-			createdAT : new Date().getTime()
-		});
+		io.emit('newMessage',generateMessage(newmsg.from,newmsg.text));
 		// socket.broadcast.emit('newMessage',{
 		// 	from : newmsg.from,
 		// 	text : newmsg.text,
