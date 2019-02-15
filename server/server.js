@@ -16,15 +16,21 @@ io.on('connection',(socket)=>{
 socket.on('disconnect',()=>{
 	console.log('user was disconnected');
 	});
-
-socket.emit('newMessage',{
-	from : 'ajay',
-	text:'ssup',
-	createdAt : 123
-	});
+//socket.emit emits signal to a single connection.
+//io.emit emits signal to every single connection.
+// socket.emit('newMessage',{
+// 	from : 'ajay',
+// 	text:'ssup',
+// 	createdAt : 123
+// 	});
 socket.on('createMessage',(newmsg)=>{
-	console.log('new msg',newmsg);
-});
+		console.log('new msg',newmsg);
+		io.emit('newMessage',{
+			from:newmsg.from,
+			text : newmsg.text,
+			createdAT : new Date().getTime()
+		})
+	});
 });
 
 server.listen(port,()=>{
