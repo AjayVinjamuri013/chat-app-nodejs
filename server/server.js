@@ -13,9 +13,7 @@ app.use(express.static(publicPath));
 io.on('connection',(socket)=>{
 	console.log('new user connection');
 
-socket.on('disconnect',()=>{
-	console.log('user was disconnected');
-	});
+
 //socket.emit emits signal to a single connection.
 //io.emit emits signal to every single connection.
 // socket.emit('newMessage',{
@@ -23,13 +21,31 @@ socket.on('disconnect',()=>{
 // 	text:'ssup',
 // 	createdAt : 123
 // 	});
+socket.emit('newMessage',{
+	from : 'admin',
+	text : 'welcome!!',
+	createdAt : new Date().getTime()
+});
+socket.broadcast.emit('newMessage',{
+	from:'admin',
+	text : 'new user joined',
+	createdAt : new Date().getTime()
+});
 socket.on('createMessage',(newmsg)=>{
 		console.log('new msg',newmsg);
 		io.emit('newMessage',{
-			from:newmsg.from,
+			from : newmsg.from,
 			text : newmsg.text,
 			createdAT : new Date().getTime()
-		})
+		});
+		// socket.broadcast.emit('newMessage',{
+		// 	from : newmsg.from,
+		// 	text : newmsg.text,
+		// 	createdAT : new Date().getTime()
+		// });
+	});
+socket.on('disconnect',()=>{
+	console.log('user was disconnected');
 	});
 });
 
