@@ -24,10 +24,13 @@ io.on('connection',(socket)=>{
 // 	createdAt : 123
 // 	});
 socket.emit('newMessage',generateMessage('Admin','Welcome !!!'));
+
 socket.broadcast.emit('newMessage',generateMessage('Admin','new user joined'));
-socket.on('createMessage',(newmsg)=>{
-		console.log('new msg',newmsg);
+
+socket.on('createMessage',(newmsg,callback)=>{
+		console.log('create msg',newmsg);
 		io.emit('newMessage',generateMessage(newmsg.from,newmsg.text));
+		callback('This is from server.');
 		// socket.broadcast.emit('newMessage',{
 		// 	from : newmsg.from,
 		// 	text : newmsg.text,
