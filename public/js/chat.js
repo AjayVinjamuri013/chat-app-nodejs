@@ -18,8 +18,17 @@
 		}
 	}
 	socket.on('connect',function(){
-		console.log('connected to server');
-
+		var param = jQuery.deparam(window.location.search);
+		//console.log('connected to server');
+		socket.emit('join',param,function (err){
+			if(err){
+						alert(err);
+						window.location.href = '/';
+			}
+			else {
+						console.log('No error');
+			}
+		});
 	// socket.emit('createMessage',{
 	// 	from : 'akash',
 	// 	text : 'hello'
@@ -29,6 +38,14 @@
 		console.log('disconnected from server');
 	});
 
+	socket.on('updateUserList',function(users){
+		//console.log('Users List',users);
+		var ol = jQuery('<ol></ol>');
+		users.forEach(function (user){
+			ol.append(jQuery('<li></li>').text(user));
+		});
+		jQuery('#users').html(ol);
+	});
 	socket.on('newMessage',function (msg) {
 		var template = jQuery('#message-template').html();
 		 var formattedTime = moment(msg.createdAt).format('h:mm a');
