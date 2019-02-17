@@ -1,5 +1,22 @@
 //by calling io method,we are initiating the request	
 	var socket=io();
+
+	function scrollToBottom()
+	{
+		var messages= jQuery('#messages');
+		var newMessage = messages.children('li:last-child');
+
+		var clientHeight = messages.prop('clientHeight');
+		var scrollTop = messages.prop('scrollTop');
+		var scrollHeight = messages.prop('scrollHeight');
+		var newMessageHeight = newMessage.innerHeight();
+		var lastMessageHeight = newMessage.prev().innerHeight();
+		if(clientHeight+scrollTop+newMessageHeight+lastMessageHeight>=scrollHeight)
+		{
+			messages.scrollTop(scrollHeight);
+			//console.log('should scroll');
+		}
+	}
 	socket.on('connect',function(){
 		console.log('connected to server');
 
@@ -22,7 +39,7 @@
 		});
 
 		jQuery('#messages').append(html);
-		
+		scrollToBottom();
 		// //console.log('new message',msg);
 		// var li = jQuery('<li></li>');
 		// li.text(`${msg.from} ${formattedTime}: ${msg.text}`);
@@ -38,7 +55,7 @@
 			url :msg.url,
 			createdAt : formattedTime
 		});
-
+		scrollToBottom();
 		jQuery('#messages').append(html);
 		// var li = jQuery('<li></li>');
 		// var a =jQuery('<a target = _blank">My current Location</a>');
